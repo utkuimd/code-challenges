@@ -1,5 +1,6 @@
 document.querySelector('.enter').addEventListener('click', function() {
     const input = Number(document.querySelector('.input').value);
+    const undInput = document.querySelector('.input').value;
     if(!input) {
         alert('Please enter a number!');
     }
@@ -7,25 +8,34 @@ document.querySelector('.enter').addEventListener('click', function() {
         alert('This number is not natural!');
     }
     else {
+        //const Properties = {even: null, odd: null, buzz: null, duck: null};
+
         const resultBox = document.createElement('div');
         resultBox.id = 'resDiv';
         document.body.appendChild(resultBox);
 
-        const oddEvenText = document.createElement('p');
-        oddEvenText.textContent = `This number is ${isOddOrEven(input)}.`;
-        resultBox.appendChild(oddEvenText);
+        const properTxt = document.createElement('p');
+        properTxt.textContent = `Properties of ${undInput}`;
+        resultBox.appendChild(properTxt);
+        
+        const evenTxt = document.createElement('span');
+        evenTxt.textContent = `even: ${isEven(input)}`;
+        resultBox.appendChild(evenTxt);
+        resultBox.appendChild(document.createElement('br'));
 
-        const buzzOrNotText = document.createElement('p');
-        buzzOrNotText.textContent = isBuzz(input).buzzOrNot;
-        resultBox.appendChild(buzzOrNotText);
+        const oddTxt = document.createElement('span');
+        oddTxt.textContent = `odd: ${isOdd(input)}`;
+        resultBox.appendChild(oddTxt);
+        resultBox.appendChild(document.createElement('br'));
 
-        const expText = document.createElement('p');
-        expText.innerHTML = 'Explanation:';
-        resultBox.appendChild(expText);
+        const buzzTxt = document.createElement('span');
+        buzzTxt.textContent = `buzz: ${isBuzz(input)}`;
+        resultBox.appendChild(buzzTxt);
+        resultBox.appendChild(document.createElement('br'));
 
-        const explanationText = document.createElement('p');
-        explanationText.textContent = isBuzz(input).explanation;
-        resultBox.appendChild(explanationText);
+        const duckTxt = document.createElement('span');
+        duckTxt.textContent = `duck: ${isDuck(undInput)}`;
+        resultBox.appendChild(duckTxt);
     }
     document.querySelector('.input').value = '';
 })
@@ -37,30 +47,31 @@ document.querySelector('.input').addEventListener('click', function() {
     }
 })
 
-function isOddOrEven(num) {
-    return num % 2 === 0 ? 'Even' : 'Odd'
+function isEven(num) {
+    return num % 2 === 0 ? true : false
+}
+
+function isOdd(num) {
+    return num % 2 === 1 ? true : false
 }
 
 function isBuzz(num) {
-    const resObj = {}
-    if(num % 7 !== 0) {
-        if(num % 10 !== 7) {
-            resObj.buzzOrNot = 'It is not a Buzz number.';
-            resObj.explanation = `${num} is neither divisible by 7 nor does it end with 7.`
-        }
-        else {
-            resObj.buzzOrNot = 'It is a Buzz number.';
-            resObj.explanation = `${num} ends with 7.`
+    if(num % 7 !== 0 && num % 10 !== 7) {
+        return false
+    } else {
+        return true
+    }
+}
+
+function isDuck(num) {
+    var arr = num.toString().split('');
+    if(arr[0] == 0) {
+        return false
+    }
+    for(var i = 1; i < arr.length; i++) {
+        if(arr[i] == 0) {
+            return true
         }
     }
-    else {
-        resObj.buzzOrNot = 'It is a Buzz number.';
-        if(num % 10 !== 7) {
-            resObj.explanation = `${num} is divisible by 7.`
-        }
-        else {
-            resObj.explanation = `${num} is divisible by 7 and ends with 7.`
-        }
-    }
-    return resObj
+    return false
 }
