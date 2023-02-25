@@ -1,54 +1,71 @@
+const properties = ['even', 'odd', 'buzz', 'duck', 'palindromic', 'gapful'];
+const functions = [isEven, isOdd, isBuzz, isDuck, isPal, isGap];
+
+// HELPER FUNCTIONS
+function containsOnlyNumbers(str) {
+    return /^\d+$/.test(str);
+}
+
+function leftShift(arr) {
+    var firstEl = arr.shift()
+    arr.push(firstEl)
+    return arr
+}
+
 document.querySelector('.enter').addEventListener('click', function() {
-    
     const input = document.querySelector('.input').value;
+    const arrIn = input.split(' ');
 
     const resultBox = document.createElement('div');
     resultBox.id = 'resDiv';
     document.body.appendChild(resultBox);
 
-    if(!input) {
-        alert('Please enter a number!');
+    if(arrIn[0] === '') {
+        const supReqBox = document.querySelector('#supReqDiv');
+        const clone = supReqBox.cloneNode(true);
+        clone.id = 'supReqDiv2';
+        resultBox.appendChild(clone);
     }
-    else if(input === '0') {
-        const byeMes = document.createElement('p');
-        byeMes.textContent = 'Goodbye!';
-        resultBox.appendChild(byeMes);
-        setTimeout(() => { window.close() }, 1000)
-    }
-    else if(input < 0) {
+    else if(!containsOnlyNumbers(arrIn[0]) || arrIn[0] < 0) {
         const errMes = document.createElement('p');
         errMes.textContent = 'The first parameter should be a natural number or zero.';
         errMes.style.color = 'red';
         resultBox.appendChild(errMes);
     }
+    else if(arrIn[0] === '0') {
+        const byeMes = document.createElement('p');
+        byeMes.textContent = 'Goodbye!';
+        resultBox.appendChild(byeMes);
+        setTimeout(() => { window.close() }, 1000)
+    }
     else {
-        const properTxt = document.createElement('p');
-        properTxt.textContent = `Properties of ${input}`;
-        resultBox.appendChild(properTxt);
+        if(arrIn.length === 1) {
+            const properTxt = document.createElement('p');
+            properTxt.textContent = `Properties of ${arrIn[0]}`;
+            resultBox.appendChild(properTxt);
+            
+            for(var i = 0; i < properties.length; i++) {
+                const text = document.createElement('span');
+                text.textContent = `${properties[i]}: ${functions[i](arrIn[0])}`;
+                resultBox.appendChild(text);
+                resultBox.appendChild(document.createElement('br'));
+            }
+        }
+        else if(arrIn.length === 2) {
+            for(var i = 0; i < arrIn[1]; i++) {
+                var trueFunc = [];
+                for(var j = 0; j < functions.length; j++) {
+                    if(functions[j](String(parseInt(arrIn[0]) + i))) {
+                        trueFunc.push(properties[j])
+                    }
+                }
+                const text = document.createElement('span');
+                text.textContent = `${String(parseInt(arrIn[0]) + i)} is ${trueFunc.toString()}`;
+                resultBox.appendChild(text);
+                resultBox.appendChild(document.createElement('br'));
+            }
+        }
         
-        const evenTxt = document.createElement('span');
-        evenTxt.textContent = `even: ${isEven(input)}`;
-        resultBox.appendChild(evenTxt);
-        resultBox.appendChild(document.createElement('br'));
-
-        const oddTxt = document.createElement('span');
-        oddTxt.textContent = `odd: ${isOdd(input)}`;
-        resultBox.appendChild(oddTxt);
-        resultBox.appendChild(document.createElement('br'));
-
-        const buzzTxt = document.createElement('span');
-        buzzTxt.textContent = `buzz: ${isBuzz(input)}`;
-        resultBox.appendChild(buzzTxt);
-        resultBox.appendChild(document.createElement('br'));
-
-        const duckTxt = document.createElement('span');
-        duckTxt.textContent = `duck: ${isDuck(input)}`;
-        resultBox.appendChild(duckTxt);
-        resultBox.appendChild(document.createElement('br'));
-
-        const palTxt = document.createElement('span');
-        palTxt.textContent = `palindromic: ${isPal(input)}`;
-        resultBox.appendChild(palTxt);
     }
     document.querySelector('.input').value = '';
 })
@@ -60,6 +77,7 @@ document.querySelector('.input').addEventListener('click', function() {
     }
 })
 
+// PROPERTIES FUNCTIONS
 function isEven(val) {
     var arrVal = val.split('')
     var lastDigit = parseInt(arrVal[arrVal.length - 1])
@@ -75,13 +93,7 @@ function isOdd(val) {
 function isBuzz(val) {
     var arrVal = val.split('')
     var lastEl = arrVal[arrVal.length - 1]
-
     var fArr = [1, 3, 2, -1, -3, -2]
-    function leftShift(arr) {
-        var firstEl = arr.shift()
-        arr.push(firstEl)
-        return arr
-    }
     var arrVal1 = val.split('')
     var sum = 0
 
@@ -121,6 +133,18 @@ function isPal(val) {
         }
         left++
         right--
+    }
+    return true
+}
+
+function isGap(val) {
+    var arr = val.split('');
+    if(arr.length < 3) {
+        return false
+    }
+    var divisor = parseInt(arr[0].concat(arr[arr.length - 1]));
+    if(val % divisor !== 0) {
+        return false
     }
     return true
 }

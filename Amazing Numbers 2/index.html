@@ -8,15 +8,24 @@
 </head>
 <body>
     <h2>Amazing Numbers 2 code challenge</h2>
-    <h3>Welcome to Amazing Numbers!</h3>
-    <p>Supported requests:</p>
-    <ul>
-        <li>enter a natural number to know its properties;</li>
-        <li>enter 0 to exit.</li>
-    </ul>
-    <p>Enter a natural number:</p>
-    <input class="input" type="number">
+    <p>Welcome to Amazing Numbers!</p>
+    <div id="supReqDiv">
+        <p>Supported requests:</p>
+        <ul>
+            <li>enter a natural number to know its properties;</li>
+            <li>enter two natural numbers to obtain the properties of the list:</li>
+                <ul>
+                    <li>the first parameter represents a starting number;</li>
+                    <li>the second parameter shows how many consecutive numbers are to be processed;</li>
+                </ul>
+            <li>separate the parameters with one space;</li>
+            <li>enter 0 to exit.</li>
+        </ul>
+    </div>
+    <p>Enter a request: </p>
+    <input class="input">
     <button class="enter">Enter</button>
 </body>
 <script src="amaNum2.js"></script>
 </html>
+
