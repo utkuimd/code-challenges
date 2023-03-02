@@ -1,5 +1,5 @@
-const properties = ['even', 'odd', 'buzz', 'duck', 'palindromic', 'gapful'];
-const functions = [isEven, isOdd, isBuzz, isDuck, isPal, isGap];
+const properties = ['even', 'odd', 'buzz', 'duck', 'palindromic', 'gapful', 'spy'];
+const functions = [isEven, isOdd, isBuzz, isDuck, isPal, isGap, isSpy];
 
 // HELPER FUNCTIONS
 function containsOnlyNumbers(str) {
@@ -26,9 +26,21 @@ document.querySelector('.enter').addEventListener('click', function() {
         clone.id = 'supReqDiv2';
         resultBox.appendChild(clone);
     }
-    else if(!containsOnlyNumbers(arrIn[0]) || arrIn[0] < 0) {
+    else if(!containsOnlyNumbers(arrIn[0])) {
         const errMes = document.createElement('p');
         errMes.textContent = 'The first parameter should be a natural number or zero.';
+        errMes.style.color = 'red';
+        resultBox.appendChild(errMes);
+    }
+    else if((!containsOnlyNumbers(arrIn[1]) && arrIn[1] !== undefined) || arrIn[1] === '0') {
+        const errMes = document.createElement('p');
+        errMes.textContent = 'The second parameter should be a natural number.';
+        errMes.style.color = 'red';
+        resultBox.appendChild(errMes);
+    }
+    else if(!properties.includes(arrIn[2]) && arrIn[2] !== undefined) {
+        const errMes = document.createElement('p');
+        errMes.innerText = `The property [${arrIn[2]}] is wrong.\n\nAvailable properties: [${properties.toString()}]`;
         errMes.style.color = 'red';
         resultBox.appendChild(errMes);
     }
@@ -65,7 +77,27 @@ document.querySelector('.enter').addEventListener('click', function() {
                 resultBox.appendChild(document.createElement('br'));
             }
         }
-        
+        else if(arrIn.length === 3) {
+            var cnt = 0
+            for(var i = parseInt(arrIn[0]); i < Infinity; i++) {
+                if(cnt == arrIn[1]) {
+                    break
+                }
+                var trueFuncFilPro = []
+                for(var j = 0; j < functions.length; j++) {
+                    if(functions[j](String(i))) {
+                        trueFuncFilPro.push(properties[j])
+                    }
+                }
+                if(trueFuncFilPro.includes(arrIn[2])) {
+                    const text = document.createElement('span');
+                    text.textContent = `${String(i)} is ${trueFuncFilPro.toString()}`;
+                    resultBox.appendChild(text);
+                    resultBox.appendChild(document.createElement('br'));
+                    cnt++
+                }
+            }
+        }
     }
     document.querySelector('.input').value = '';
 })
@@ -147,4 +179,17 @@ function isGap(val) {
         return false
     }
     return true
+}
+
+function isSpy(val) {
+    var arr  = val.split('');
+    var sum = 0
+    var mul = 1
+    for(var i = 0; i < arr.length; i++) {
+        sum += parseInt(arr[i])
+    }
+    for(var i = 0; i < arr.length; i++) {
+        mul *= parseInt(arr[i])
+    }
+    return sum === mul ? true : false
 }
