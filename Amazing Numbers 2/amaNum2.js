@@ -1,5 +1,5 @@
-const properties = ['even', 'odd', 'buzz', 'duck', 'palindromic', 'gapful', 'spy', 'square', 'sunny'];
-const functions = [isEven, isOdd, isBuzz, isDuck, isPal, isGap, isSpy, isSquare, isSunny];
+const properties = ['even', 'odd', 'buzz', 'duck', 'palindromic', 'gapful', 'spy', 'square', 'sunny', 'jumping'];
+const functions = [isEven, isOdd, isBuzz, isDuck, isPal, isGap, isSpy, isSquare, isSunny, isJump];
 
 // HELPER FUNCTIONS
 function containsOnlyNumbers(str) {
@@ -10,6 +10,16 @@ function leftShift(arr) {
     var firstEl = arr.shift()
     arr.push(firstEl)
     return arr
+}
+
+function isValidPro(arr) {
+    var invalidPro = []
+    for(var i = 2; i < arr.length; i++) {
+        if(!properties.includes(arr[i]) && arr[i] !== undefined) {
+            invalidPro.push(arr[i])
+        }
+    }
+    return invalidPro
 }
 
 document.querySelector('.enter').addEventListener('click', function() {
@@ -38,15 +48,9 @@ document.querySelector('.enter').addEventListener('click', function() {
         errMes.style.color = 'red';
         resultBox.appendChild(errMes);
     }
-    else if(!properties.includes(arrIn[2]) && arrIn[2] !== undefined) {
+    else if(isValidPro(arrIn).length !== 0) {
         const errMes = document.createElement('p');
-        errMes.innerText = `The property [${arrIn[2]}] is wrong.\n\nAvailable properties: [${properties.toString()}]`;
-        errMes.style.color = 'red';
-        resultBox.appendChild(errMes);
-    }
-    else if(!properties.includes(arrIn[3]) && arrIn[3] !== undefined) {
-        const errMes = document.createElement('p');
-        errMes.innerText = `The property [${arrIn[3]}] is wrong.\n\nAvailable properties: [${properties.toString()}]`;
+        errMes.innerText = `The property [${isValidPro(arrIn)}] is wrong.\nAvailable properties: [${properties.toString()}]`;
         errMes.style.color = 'red';
         resultBox.appendChild(errMes);
     }
@@ -115,19 +119,25 @@ document.querySelector('.enter').addEventListener('click', function() {
                 }
             }
         }
-        else if(arrIn.length === 4) {
+        else if(4 <= arrIn.length && arrIn.length <= 10) {
             var cnt = 0
             for(var i = parseInt(arrIn[0]); i < Infinity; i++) {
                 if(cnt == arrIn[1]) {
                     break
                 }
                 var trueFuncFilPro = []
+                var bool = true
                 for(var j = 0; j < functions.length; j++) {
                     if(functions[j](String(i))) {
                         trueFuncFilPro.push(properties[j])
                     }
                 }
-                if(trueFuncFilPro.includes(arrIn[2]) && trueFuncFilPro.includes(arrIn[3])) {
+                for(var k = 2; k < arrIn.length; k++) {
+                    if(!trueFuncFilPro.includes(arrIn[k])){
+                        bool = false
+                    }
+                }
+                if(bool){
                     const text = document.createElement('span');
                     text.textContent = `${String(i)} is ${trueFuncFilPro.toString()}`;
                     resultBox.appendChild(text);
@@ -238,5 +248,16 @@ function isSquare(val) {
 
 function isSunny(val) {
     return Math.sqrt(parseInt(val) + 1) % 1 === 0 ? true : false
+}
+
+function isJump(val) {
+    var arr = val.split('');
+    for(var i = 0; i < arr.length - 1; i++) {
+        if(((parseInt(arr[i]) + 1) !== parseInt(arr[i + 1])) &&
+            ((parseInt(arr[i]) - 1) !== parseInt(arr[i + 1]))) {
+            return false
+        }
+    }
+    return true
 }
 
