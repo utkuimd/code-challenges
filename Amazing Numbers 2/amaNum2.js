@@ -1,26 +1,6 @@
-const properties = ['even', 'odd', 'buzz', 'duck', 'palindromic', 'gapful', 'spy', 'square', 'sunny', 'jumping'];
-const functions = [isEven, isOdd, isBuzz, isDuck, isPal, isGap, isSpy, isSquare, isSunny, isJump];
-
-// HELPER FUNCTIONS
-function containsOnlyNumbers(str) {
-    return /^\d+$/.test(str);
-}
-
-function leftShift(arr) {
-    var firstEl = arr.shift()
-    arr.push(firstEl)
-    return arr
-}
-
-function isValidPro(arr) {
-    var invalidPro = []
-    for(var i = 2; i < arr.length; i++) {
-        if(!properties.includes(arr[i]) && arr[i] !== undefined) {
-            invalidPro.push(arr[i])
-        }
-    }
-    return invalidPro
-}
+const properties = ['even', 'odd', 'buzz', 'duck', 'palindromic', 'gapful', 'spy', 'square', 'sunny', 'jumping', 'happy', 'sad'];
+const nProperties = ['-even', '-odd', '-buzz', '-duck', '-palindromic', '-gapful', '-spy', '-square', '-sunny', '-jumping', '-happy', '-sad'];
+const functions = [isEven, isOdd, isBuzz, isDuck, isPal, isGap, isSpy, isSquare, isSunny, isJump, isHappy, isSad];
 
 document.querySelector('.enter').addEventListener('click', function() {
     const input = document.querySelector('.input').value;
@@ -54,14 +34,9 @@ document.querySelector('.enter').addEventListener('click', function() {
         errMes.style.color = 'red';
         resultBox.appendChild(errMes);
     }
-    else if((arrIn[2] === 'even' && arrIn[3] === 'odd') ||
-            (arrIn[3] === 'even' && arrIn[2] === 'odd') ||
-            (arrIn[2] === 'duck' && arrIn[3] === 'spy') ||
-            (arrIn[3] === 'duck' && arrIn[2] === 'spy') ||
-            (arrIn[2] === 'square' && arrIn[3] === 'sunny') ||
-            (arrIn[3] === 'square' && arrIn[2] === 'sunny')) {
+    else if(isMutPro(arrIn).length !== 0) {
         const errMes = document.createElement('p');
-        errMes.innerText = `The request contains mutually exclusive properties: [${arrIn[2]}, ${arrIn[3]}]\nThere are no numbers with these properties.`;
+        errMes.innerText = `The request contains mutually exclusive properties: [${isMutPro(arrIn)}]\nThere are no numbers with these properties.`;
         errMes.style.color = 'red';
         resultBox.appendChild(errMes);
     }
@@ -98,48 +73,32 @@ document.querySelector('.enter').addEventListener('click', function() {
                 resultBox.appendChild(document.createElement('br'));
             }
         }
-        else if(arrIn.length === 3) {
+        else {
             var cnt = 0
             for(var i = parseInt(arrIn[0]); i < Infinity; i++) {
                 if(cnt == arrIn[1]) {
                     break
                 }
-                var trueFuncFilPro = []
-                for(var j = 0; j < functions.length; j++) {
-                    if(functions[j](String(i))) {
-                        trueFuncFilPro.push(properties[j])
-                    }
-                }
-                if(trueFuncFilPro.includes(arrIn[2])) {
-                    const text = document.createElement('span');
-                    text.textContent = `${String(i)} is ${trueFuncFilPro.toString()}`;
-                    resultBox.appendChild(text);
-                    resultBox.appendChild(document.createElement('br'));
-                    cnt++
-                }
-            }
-        }
-        else if(4 <= arrIn.length && arrIn.length <= 10) {
-            var cnt = 0
-            for(var i = parseInt(arrIn[0]); i < Infinity; i++) {
-                if(cnt == arrIn[1]) {
-                    break
-                }
-                var trueFuncFilPro = []
+                var truePropers = []
+                var falsePropers = []
+                var allPropers = []
                 var bool = true
                 for(var j = 0; j < functions.length; j++) {
                     if(functions[j](String(i))) {
-                        trueFuncFilPro.push(properties[j])
+                        truePropers.push(properties[j])
+                    } else {
+                        falsePropers.push(nProperties[j])
                     }
                 }
+                allPropers = truePropers.concat(falsePropers)
                 for(var k = 2; k < arrIn.length; k++) {
-                    if(!trueFuncFilPro.includes(arrIn[k])){
+                    if(!allPropers.includes(arrIn[k])){
                         bool = false
                     }
                 }
                 if(bool){
                     const text = document.createElement('span');
-                    text.textContent = `${String(i)} is ${trueFuncFilPro.toString()}`;
+                    text.textContent = `${String(i)} is ${truePropers.toString()}`;
                     resultBox.appendChild(text);
                     resultBox.appendChild(document.createElement('br'));
                     cnt++
@@ -259,5 +218,96 @@ function isJump(val) {
         }
     }
     return true
+}
+
+function isHappy(val) {
+    var sum = parseInt(val);
+    var arrAllSum = []
+    var tempSum = 0
+    while(1) {
+        arrAllSum.push(sum)
+        for(var i = 0; i < String(sum).split('').length; i++) {
+            tempSum += Math.pow(parseInt(String(sum).split('')[i]), 2)
+        }
+        if(tempSum === 1) {
+            return true
+        }
+        if(arrAllSum.includes(tempSum)) {
+            return false
+        }
+        sum = tempSum
+        tempSum = 0
+    }
+}
+
+function isSad(val) {
+    var sum = parseInt(val);
+    var arrAllSum = []
+    var tempSum = 0
+    while(1) {
+        arrAllSum.push(sum)
+        for(var i = 0; i < String(sum).split('').length; i++) {
+            tempSum += Math.pow(parseInt(String(sum).split('')[i]), 2)
+        }
+        if(tempSum === 1) {
+            return false
+        }
+        if(arrAllSum.includes(tempSum)) {
+            return true
+        }
+        sum = tempSum
+        tempSum = 0
+    }
+}
+
+// HELPER FUNCTIONS
+function containsOnlyNumbers(str) {
+    return /^\d+$/.test(str);
+}
+
+function leftShift(arr) {
+    var firstEl = arr.shift()
+    arr.push(firstEl)
+    return arr
+}
+
+function isValidPro(arr) {
+    var invalidPro = []
+    for(var i = 2; i < arr.length; i++) {
+        if(!properties.includes(arr[i]) && !nProperties.includes(arr[i]) && arr[i] !== undefined) {
+            invalidPro.push(arr[i])
+        }
+    }
+    return invalidPro
+}
+
+function isMutPro(arr) {
+    var mutPro = []
+    for(var i = 2; i < arr.length; i++) {
+        if(arr[i] !== undefined) {
+            if(arr.includes('-'.concat(arr[i]))) {      // E.g. [buzz, -buzz], [even, -even]...
+                mutPro.push(arr[i], ' -'.concat(arr[i]))
+            }
+            if(arr[i] === 'even' && arr.includes('odd')) {
+                mutPro.push('even', ' odd')
+            }
+            if(arr[i] === '-even' && arr.includes('-odd')) {
+                mutPro.push('-even', ' -odd')
+            }
+            if(arr[i] === 'duck' && arr.includes('spy')) {
+                mutPro.push('duck', ' spy')
+            }
+            if(arr[i] === 'sunny' && arr.includes('square')) {
+                mutPro.push('sunny', ' square')
+            }
+            if(arr[i] === 'happy' && arr.includes('sad')) {
+                mutPro.push('happy', ' sad')
+            }
+            if(arr[i] === '-happy' && arr.includes('-sad')) {
+                mutPro.push('-happy', ' -sad')
+            }
+        }
+    }
+    return mutPro
 }
 
